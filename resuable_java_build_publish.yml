@@ -1,0 +1,34 @@
+name: Build Java Application and Publish Artifact in Github Packages
+on:
+  workflow_call:
+    inputs:
+      java_version:
+        description: 'Java version to use for the build'
+        required: true
+        default: '17'
+      secrets:
+        GITHUB_TOKEN:
+          required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java ${{ inputs.java_version }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ inputs.java_version }}
+          distribution: 'temurin'
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests --no-transfer-progress
+
+      - name: Publish to GitHub Packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: springboot-artifact
+          paths: target/*.jar
+
