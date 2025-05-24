@@ -6,6 +6,7 @@ on:
         description: 'Java version to use for the build'
         required: true
         default: '17'
+        type: string
 
 
 jobs:
